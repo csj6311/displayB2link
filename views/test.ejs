@@ -1,0 +1,246 @@
+
+<!--<link rel="stylesheet" type="text/css" href="/css/style.css">-->
+<title>DevStuffAnything</title>
+<meta name="google-site-verification" content="O7b1mOIx2CjpQJevgdmfCv5mW6JOy02EJrqtX8AheoE" />
+<!--Import Google Icon Font-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/materialize.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+<html>
+<head>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script>
+        var displayStart;
+        var flag = 1;
+        var socket = io.connect('http://b2labs.b2link.co.kr:9001');
+        socket.on('toclient',function(data){
+            console.log(data.msg);
+            //Materialize.toast(data.msg,3000)
+//sadasdasdasdas
+            // $('#msgs').append(data.msg+'<BR>');
+            stopAndModalCall(data.msg)
+        });
+
+        function stopAndModalCall(param1) {
+//            clearTimeout(displayStart);
+            $('#modal1').openModal();
+            $('#modal1 .modal-content').html(param1);
+//            flag = 0;
+            setTimeout(function () {
+                $('#modal1').closeModal();
+            },5000)
+        }
+
+        var data = <%-JSON.stringify(data)%>
+
+        var maxLoops = data.length;
+        var counter = 0;
+
+        function next() {
+
+            if(flag == 1){
+                if(counter == 0){
+                    var timer = 0;
+                }else {
+                    var timer = 5000;
+                }
+
+                if (counter >= maxLoops) counter = 0;
+
+                displayStart = setTimeout(function() {
+
+                    console.log("counter=>",counter)
+                    console.log("timer=>",timer);
+                    if(data[counter].pageType == 'img'){
+                        $('#row').html("<img id=\'aaa\' src=\'/"+data[counter].filepath+"\'>")
+                        $('#aaa').css('width', "100%");
+                    }else{
+
+                        var html ='';
+
+                        html += '<div class="divImg">'
+                        html += '<img src="/img/chartData_top.jpg">'
+                        html += '</div>'
+                        html += '<div class="col s4">'
+                        html += '<div class="divdata">'
+                        html += '<div><span class="fontSize_120">'+((data[counter].accounts[0].sales.total / data[counter].accounts[0].goal.total)*100).toFixed(2)+' %</span></div>'
+                        html += '<div style="padding: 5px;"></div>'
+                        html += '<div><h4 class="fontWeight700">B2LiNK Goal / Achievement</h4></div>'
+                        html += '<div><h3>'+data[counter].accounts[0].goal.total.toLocaleString()+' / '+data[counter].accounts[0].sales.total.toLocaleString()+'</h3></div>'
+                        html += '<div class="pd5"></div>'
+                        html += '<div><h4><span class="fontWeight700">Goal / Achievement</span></h4></div>'
+                        html += '<div style="display :table;">'
+                        html += '<li class="tableCell w70"><h4>OFF</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.off.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.off.toLocaleString().toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div style="display :table;">'
+                        html += '<li class="tableCell w70"><h4>AP</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.ap.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li  class="tableCell w130"><h4>'+data[counter].accounts[0].sales.ap.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div>'
+                        html += '<li class="tableCell w70"><h4>B2B</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.b2b.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.b2b.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div>'
+                        html += '<li class="tableCell w70"><h4>B2C</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.b2c.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.b2c.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div>'
+                        html += '<li class="tableCell w70"><h4>CT</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.ct.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.ct.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div>'
+                        html += '<li class="tableCell w70"><h4>BD</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.bd.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.bd.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '<div>'
+                        html += '<li class="tableCell w70"><h4>CT</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].goal.sc.toLocaleString()+'</h4></li>'
+                        html += '<li class="tableCell w35"><h4>/</h4></li>'
+                        html += '<li class="tableCell w130"><h4>'+data[counter].accounts[0].sales.sc.toLocaleString()+'</h4></li>'
+                        html += '</div>'
+                        html += '</div>'
+                        html += '</div>'
+                        html += '<div class="col s8">'
+                        html += '<div id="chartdiv"></div>'
+                        html += '</div>'
+                        $('#row').html(html)
+
+                        var chart = AmCharts.makeChart("chartdiv", {
+                            "theme"         : "light",
+                            "type"          : "serial",
+                            "gridCount"     : 5,
+                            "dataProvider"  : [{
+                                "divsion"           : "off",
+                                "divsionGoal"       : data[counter].accounts[0].goal.off,
+                                "divsionSales"      : data[counter].accounts[0].sales.off,
+                                "totalRate"         : 100,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.off,data[counter].accounts[0].goal.off)
+                            }, {
+                                "divsion"           : "ap",
+                                "totalRate"         : 100,
+                                "divsionGoal"       : data[counter].accounts[0].goal.ap,
+                                "divsionSales"      : data[counter].accounts[0].sales.ap,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.ap,data[counter].accounts[0].goal.ap)
+                            }, {
+                                "divsion"           : "b2b",
+                                "totalRate"         : 100,
+                                "divsionGoal"       : data[counter].accounts[0].goal.b2b,
+                                "divsionSales"      : data[counter].accounts[0].sales.b2b,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.b2b,data[counter].accounts[0].goal.b2b)
+                            }, {
+                                "divsion"           : "b2c",
+                                "totalRate"         : 100,
+                                "divsionGoal"       : data[counter].accounts[0].goal.b2c,
+                                "divsionSales"      : data[counter].accounts[0].sales.b2c,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.b2c,data[counter].accounts[0].goal.b2c)
+                            }, {
+                                "divsion"           : "ct",
+                                "totalRate"         : 100,
+                                "divsionGoal"       : data[counter].accounts[0].goal.ct,
+                                "divsionSales"      : data[counter].accounts[0].sales.ct,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.ct,data[counter].accounts[0].goal.ct)
+                            }, {
+                                "divsion"           : "bd",
+                                "totalRate"         : 100,
+                                "divsionGoal"       : data[counter].accounts[0].goal.bd,
+                                "divsionSales"      : data[counter].accounts[0].sales.bd,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.bd,data[counter].accounts[0].goal.bd)
+                            }, {
+                                "divsion"           : "sc",
+                                "divsionGoal"       : data[counter].accounts[0].goal.sc,
+                                "divsionSales"      : data[counter].accounts[0].sales.sc,
+                                "totalRate"         : 100,
+                                "AchievementRate"   : chardatasosu(data[counter].accounts[0].sales.sc,data[counter].accounts[0].goal.sc)
+                            }],
+                            "valueAxes": [{
+                                "unit"          : "%",
+                                "position"      : "left",
+                                "title"         : "",
+                                "autoGridCount" : false,
+                                "minimum"       : 0,
+                                "guides": [{
+                                    "fillAlpha" : 0.5,
+                                    "fillColor" : "#1acbc3",
+                                    "lineAlpha" : 0,
+                                    "toValue"   : 100,
+                                    "value"     : 0
+                                }],
+                                "fontSize" : 20
+                            }],
+                            //"startDuration": 1, //애니메이션
+                            "graphs": [{
+                                "fontSize"      : 20,
+                                "labelText"     : "[[value]]%",
+                                "labelPosition" : 'top',
+                                "color"         : "#1e324a",
+                                "fillColors"    : "#1e324a",
+                                "fillAlphas"    : 0.9,
+                                "lineAlpha"     : 0.2,
+                                "title"         : "2005",
+                                "type"          : "column",
+                                "clustered"     :true,
+                                "valueField"    : "AchievementRate"
+                            }],
+                            "plotAreaFillAlphas": 0.1,
+                            "categoryField"     : "divsion",
+                            "categoryAxis"      : {
+                                "gridPosition"  : "start",
+                                "fontSize"      : 30
+                            },
+                            "export"            : {
+                                "enabled"       : true
+                            },
+                            "percentPrecision"  : 1,
+                            "data_labels_always_on": true
+                        })
+
+                    }
+                    counter++
+                    next();
+                }, timer);
+            }else{
+                return;
+            }
+        };
+
+        $(document).ready(function() { next()});
+        function chardatasosu(param1,param2){
+            var chardatasosu = ((param1/param2)*100).toFixed(2)
+            return chardatasosu;
+        }
+    </script>
+
+</head>
+<body>
+<div class="row" id="row"></div>
+</body>
+</html>
+
+
+<div id="modal1" class="modal">
+    <div class="modal-content fontSize_80">
+    </div>
+</div>

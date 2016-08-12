@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <!--<link rel="stylesheet" type="text/css" href="/css/style.css">-->
+    <title>DevStuffAnything</title>
+    <meta name="google-site-verification" content="O7b1mOIx2CjpQJevgdmfCv5mW6JOy02EJrqtX8AheoE" />
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/materialize.min.js"></script>
+
+</head>
+<script>
+
+    var html = '';
+
+    //리스트정보 업데이트
+    //모달1번 제어 함수
+    function modifyAddValue(value1,value2,value3,value4,value5,value6,value7,value8,value9,value10){
+        $("#modal2 #year").val(value1);
+        $("#modal2 #month").val(value2);
+        $("#modal2 #offGoal").val(value3);
+        $("#modal2 #apGoal").val(value4);
+        $("#modal2 #b2bGoal").val(value5);
+        $("#modal2 #b2cGoal").val(value6);
+        $("#modal2 #ctGoal").val(value7);
+        $("#modal2 #bdGoal").val(value8);
+        $("#modal2 #scGoal").val(value9);
+        $("#modal2 #seqnumber").val(value10);
+        console.log("test");
+        $('#modal2').openModal();
+    }
+
+    //모달4번 제어 함수
+    function modifyAddValue1(value1,value2,value3,value4,value5,value6,value7,value8,value9,value10,value11,value12){
+        $("#modal4 #year").val(value1);
+        $("#modal4 #month").val(value2);
+        $("#modal4 #week").val(value3);
+        $("#modal4 #offGoal").val(value4);
+        $("#modal4 #apGoal").val(value5);
+        $("#modal4 #b2bGoal").val(value6);
+        $("#modal4 #b2cGoal").val(value7);
+        $("#modal4 #ctGoal").val(value8);
+        $("#modal4 #bdGoal").val(value9);
+        $("#modal4 #scGoal").val(value10);
+        $("#modal4 #id1").val(value11);
+        $("#modal4 #ahcivid").val(value12);
+        $('#modal4').openModal();
+    }
+
+    function modifyAddValue5(value1,value2,value3,value4,value5,value6,value7,value8,value9,value10,value11,value12){
+        $("#modal4 #year").val(value1);
+        $("#modal4 #month").val(value2);
+        $("#modal4 #week").val(value3);
+        $("#modal4 #offAchievement").val(value4);
+        $("#modal4 #apAchievement").val(value5);
+        $("#modal4 #b2bAchievement").val(value6);
+        $("#modal4 #b2cAchievement").val(value7);
+        $("#modal4 #ctAchievement").val(value8);
+        $("#modal4 #bdAchievement").val(value9);
+        $("#modal4 #scAchievement").val(value10);
+        $("#modal4 #id1").val(value11);
+        $("#modal4 #ahcivid").val(value12);
+        $('#modal4').openModal();
+    }
+    //모달2번 제어 함수
+    function modifyAddValue3(value1,value2,value3,value4,value5,value6,value7,value8,value9,value10){
+        $("#modal2 #year").val(value1);
+        $("#modal2 #month").val(value2);
+        $("#modal2 #offGoal").val(value3);
+        $("#modal2 #apGoal").val(value4);
+        $("#modal2 #b2bGoal").val(value5);
+        $("#modal2 #b2cGoal").val(value6);
+        $("#modal2 #ctGoal").val(value7);
+        $("#modal2 #bdGoal").val(value8);
+        $("#modal2 #scGoal").val(value9);
+        $("#modal2 #_id").val(value10);
+        $('#modal2').openModal();
+    }
+
+    //모달3번 제어 함수
+    function modifyAddValue2(value1,value2,value3){
+        $("#modal3 #_id").val(value1);
+        $("#modal3 #year").val(value2);
+        $("#modal3 #month").val(value3);
+        //$("#ahcivid").val(value1);
+        $('#modal3').openModal();
+    }
+
+    //리스트삭제
+    function ajaxDelete(aaa){
+        $.ajax({
+            type : "POST",
+            url : "/chart/delete",
+            contentType: "application/json; charset=utf-8",
+            processData: false,
+            cache : false,
+            data: '{\"_id\": \"' + aaa + '\"}',
+            dataType: "json",
+            success : function() {
+                $('#modal2').closeModal();
+                ajaxListCall();
+                Materialize.toast('삭제가완료 되었습니다..', 1000);
+            },
+            error : function() {
+                Materialize.toast('흔치않은에러발생!', 1000);
+            }
+        });
+    }
+
+    /*주차별 매출실정 삭제
+    /*param1 -> 등록도큐먼트의 실적_id
+    /*param2 -> 등록도큐먼트의 _id*/
+
+    function ajaxAchiveDelete(param1,param2){
+        $.ajax({
+            type : "POST",
+            url : "/chart/achiveDelete",
+            contentType: "application/json; charset=utf-8",
+            processData: false,
+            cache : false,
+            data: '{\"achiveid\" : \"'+param1+'\"}',
+            dataType: "json",
+            success : function() {
+                totalSalesAdd(param2);
+                Materialize.toast('삭제가완료 되었습니다..', 1000);
+            },
+            error : function() {
+                Materialize.toast('흔치않은에러발생!', 1000);
+            }
+        });
+    }
+
+
+    //부서별 전체매출 갱신 함수
+
+    function totalSalesAdd(param1){
+        $.ajax({
+            url : "/chart/totalSales",
+            type : "POST",
+            contentType: "application/json; charset=utf-8",
+            processData: false,
+            cache : false,
+            data: '{\"_id\": \"' +param1+'\"}',
+            success : function(data) {
+                ajaxListCall()
+                Materialize.toast('매출데이터가 업데이트 되었습니다.', 1000);
+            },
+            error : function() {
+                Materialize.toast('흔치않은에러발생!', 1000);
+            }
+        });
+    }
+
+    //리스트호출
+    function ajaxListCall(){
+        $.ajax({
+            url: "/chart/lists",
+            cache : false,
+            success: function(results){
+                $('#modal1').closeModal();
+                //console.log(JSON.stringify(results[i]))
+                //데이터확인 콘솔.
+                //Materialize.toast('디스플레이가 등록되었습니다.', 1000,'',function(){window.location.reload();})
+                //alert(JSON.stringify(results));
+                for(var i=0; i < results.length;i++){
+
+                    html += '<tr>'
+                    html += '<td>'+results[i].year+'</td>';
+                    html += '<td>'+results[i].month+'</td>';
+                    html += '<td><h4>'+results[i].goal.total+'</h4></td>';
+                    html += '<td>'+results[i].goal.off+'</td>';
+                    html += '<td>'+results[i].goal.ap+'</td>';
+                    html += '<td>'+results[i].goal.b2b+'</td>';
+                    html += '<td>'+results[i].goal.b2c+'</td>';
+                    html += '<td>'+results[i].goal.ct+'</td>';
+                    html += '<td>'+results[i].goal.bd+'</td>';
+                    html += '<td>'+results[i].goal.sc+'</td>';
+                    html += '<td>'
+                    html += '<table class="centered striped bordered">'
+                    html += '<tr>'
+                    html += '<thead>'
+                    html += '<th>week</th>'
+                    html += '<th>off</th>'
+                    html += '<th>ap</th>'
+                    html += '<th>b2b</th>'
+                    html += '<th>b2c</th>'
+                    html += '<th>ct</th>'
+                    html += '<th>bd</th>'
+                    html += '<th>sc</th>'
+                    html += '<th>수정</th>'
+                    html += '<th>삭제</th>'
+                    html += '</thead>'
+                    html += '</tr>'
+
+                    for(var z=0; z < results[i].Achievement.length;z++) {
+                        html += '<tr>'
+                        html += '<td>' + results[i].Achievement[z].week + '주차'+'</td>';
+                        html += '<td>' + results[i].Achievement[z].off + '</td>';
+                        html += '<td>' + results[i].Achievement[z].ap + '</td>';
+                        html += '<td>' + results[i].Achievement[z].b2b + '</td>';
+                        html += '<td>' + results[i].Achievement[z].b2c + '</td>';
+                        html += '<td>' + results[i].Achievement[z].ct + '</td>';
+                        html += '<td>' + results[i].Achievement[z].bd + '</td>';
+                        html += '<td>' + results[i].Achievement[z].sc + '</td>';
+                        html += '<td>'
+                        html += '<a class="waves-effect waves-light btn modal-trigger1 #304ffe indigo accent-4" href="#" onclick="modifyAddValue5(\''+
+                                results[i].year+'\',\''+
+                                results[i].month+'\',\''+
+                                results[i].Achievement[z].week+'\',\''+
+                                results[i].Achievement[z].off+'\',\''+
+                                results[i].Achievement[z].ap+'\',\''+
+                                results[i].Achievement[z].b2b+'\',\''+
+                                results[i].Achievement[z].b2c+'\',\''+
+                                results[i].Achievement[z].ct+'\',\''+
+                                results[i].Achievement[z].bd+'\',\''+
+                                results[i].Achievement[z].sc+'\',\''+
+                                results[i]._id+'\',\''+
+                                results[i].Achievement[z]._id+'\')\">Update</a>'
+                        html += '</td>'
+                        html += '<td>'
+                        html += '<div class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="imgAdd1" onclick="ajaxAchiveDelete(\''+results[i].Achievement[z]._id+'\',\''+results[i]._id+"\')\">삭제"
+                        html += '</div>'
+                        html += '</td>'
+                        html += '</tr>'
+                    }
+                        html += '<tr>'
+                    html += '<td>Total</td>'
+                    html += '<td>'+results[i].sales.off  +'</td>'
+                    html += '<td>'+results[i].sales.ap   +'</td>'
+                    html += '<td>'+results[i].sales.b2b  +'</td>'
+                    html += '<td>'+results[i].sales.b2c  +'</td>'
+                    html += '<td>'+results[i].sales.ct   +'</td>'
+                    html += '<td>'+results[i].sales.bd   +'</td>'
+                    html += '<td>'+results[i].sales.sc   +'</td>'
+                    html += '<td colspan="2"><h5>'+results[i].sales.total+'</h5></td>'
+                        html += '</tr>'
+                        html += '</table>'
+                        html += '</td>'
+
+                    html += '<td>'+results[i].regDate+'</td>';
+                    html += '<td><a class="waves-effect waves-light btn modal-trigger1 #304ffe indigo accent-4" href="#modal3" onclick="modifyAddValue2(\''+
+                            results[i]._id+'\',\''+results[i].year+'\',\''+results[i].month+'\')\">Achiv.Add</a></td>'
+                    html += '<td>'
+                    html += '<a class="waves-effect waves-light btn modal-trigger1 #304ffe indigo accent-4" href="#modal2" onclick="modifyAddValue3(\''+
+                            results[i].year+'\',\''+
+                            results[i].month+'\',\''+
+                            results[i].goal.off+'\',\''+
+                            results[i].goal.ap+'\',\''+
+                            results[i].goal.b2b+'\',\''+
+                            results[i].goal.b2c+'\',\''+
+                            results[i].goal.ct+'\',\''+
+                            results[i].goal.bd+'\',\''+
+                            results[i].goal.sc+'\',\''+
+                            results[i]._id+'\')\">Update</a>'
+
+
+                    html += '</td><td>'
+                    html += '<a class="waves-effect waves-light btn #304ffe indigo accent-4" href="#" onclick="ajaxDelete(\''+results[i]._id+'\')">Del.</a></td>'
+                    html += '</tr>'
+                }
+
+                console.log(html);
+                $('#tableContents').html(html);
+                $('#modal1').closeModal();
+                $('.cssload-square').show();
+            },
+            error : function() {
+                Materialize.toast('흔치않은에러발생!', 1000);
+            }
+        }).done(function(){
+            $('.cssload-square').hide();
+            html ='';
+            $('form').each(function () {
+                this.reset();
+            });
+        })
+    }
+
+    $(document).ready(function() {
+        $('.modal-trigger').leanModal();
+        $('.modal-trigger1').leanModal();
+        $('.modal-trigger2').leanModal();
+        ajaxListCall()
+        $('.cssload-square').hide();
+        $(document).ready(function()
+        {
+            $("#imgAdd").click(function()
+            {
+                var formData = $("#form").serialize();
+                //console.log(formData)
+                $.ajax({
+                    type : "POST",
+                    url : "/chart/insert",
+                    cache : false,
+                    data : formData,
+                    success : function () {
+                        ajaxListCall()
+                    },
+                    error :  function () {
+                        Materialize.toast('흔치않은에러발생!', 1000);
+                    }
+                });
+            });
+            $("#achievementAdd").click(function()
+            {
+                var formData = $("#form1").serialize();
+                var formData1 = $("#form1").serializeArray();
+                console.log(JSON.stringify(formData1))
+                $.ajax({
+                    type : "POST",
+                    url : "/chart/insertAdd",
+                    cache : false,
+                    data : formData,
+                    success : function () {
+                        $('#modal3').closeModal();
+                        totalSalesAdd(formData1[0].value)
+                        ajaxListCall();
+                    },
+                    error :  function () {
+                        Materialize.toast('흔치않은에러발생!', 1000);
+                    }
+                }).done(function(){
+                    $('.cssload-square').hide();
+                    html ='';
+                    $('form3').each(function () {
+                        this.reset();
+                    });
+                });
+            });
+
+            $("#chartUpdate").click(function()
+            {
+                var formData = $("#form2").serialize();
+                console.log(formData)
+                $.ajax({
+                    type : "POST",
+                    url : "/chart/update",
+                    cache : false,
+                    data : formData,
+                    success : function () {
+                        $('#modal2').closeModal();
+                        ajaxListCall();
+
+                    },
+                    error :  function () {
+                        Materialize.toast('흔치않은에러발생!', 1000);
+                    }
+                });
+            });
+
+            $("#achiveUpdate").click(function()
+            {
+                var formData = $("#form4").serialize();
+                var formData1 = $("#form4").serializeArray();
+                console.log(JSON.stringify(formData1))
+                $.ajax({
+                    type : "POST",
+                    url : "/chart/achiveUpdate",
+                    cache : false,
+                    data : formData,
+                    success : function () {
+                        $('#modal4').closeModal();
+                        totalSalesAdd(formData1[0].value)
+                        ajaxListCall();
+
+                    },
+                    error :  function () {
+                        Materialize.toast('흔치않은에러발생!', 1000);
+                    }
+                });
+            });
+        });
+    });
+
+</script>
+<body>
+<div class="row">
+    <div class="col s2">
+        <ul style="transform: translateX(0%);" id="nav-mobile" class="side-nav fixed">
+            <li class="no-padding">
+                <ul class="collapsible collapsible-accordion">
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal"><h3>BDOS</h3></a></li>
+                </ul>
+            </li>
+            <li class="no-padding">
+                <ul class="collapsible collapsible-accordion">
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal" href="/display/list">DisplayOperation</a></li>
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal" href="/chart/list">ChartDataOperation</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+<div class="col offset-s2 s10">
+    <div class="row"></div>
+    <div class="col s10"><a class="waves-effect waves-light btn modal-trigger  #304ffe indigo accent-4" href="#modal1">등록</a></div>
+    <div class="col s10">
+        <table class="centered striped bordered">
+                <thead>
+                <tr>
+                    <th>year</th>
+                    <th>month</th>
+                    <th>goal.total</th>
+                    <th>goal.off</th>
+                    <th>goal.ap</th>
+                    <th>goal.b2b</th>
+                    <th>goal.b2c</th>
+                    <th>goal.ct</th>
+                    <th>goal.bd</th>
+                    <th>goal.sc</th>
+                    <th>Achievement</th>
+                    <th>regDate</th>
+                    <th>Achi.regDate</th>
+                    <th>update</th>
+                    <th>del.</th>
+                </tr>
+                </thead>
+                <tbody id="tableContents">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</body>
+
+
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red  btn modal-trigger" href='#modal1'>
+        <i class="large material-icons">mode_edit</i>
+    </a>
+    <!--<ul>-->
+    <!--<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>-->
+    <!--<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>-->
+    <!--<li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>-->
+    <!--<li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>-->
+    <!--</ul>-->
+</div>
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form id="form">
+                <div class="row">
+                    <div class="col s12"><h4>월매출목표등록</h4></div>
+                    <div class="col s12"><h4>Date</h4></div>
+                    <div class="col s4"><input value="" id="year" type="text" placeholder="년" name="year"/></div>
+                    <div class="col s4"><input value="" id="month" type="text" placeholder="월" name="month"/></div>
+                    <div class="col s12"><h4>팀별 달성목표</h4></div>
+                    <div class="col s3"><input value="" id="offGoal" type="text" placeholder="OFF 달성목표" name="offGoal"/></div>
+                    <div class="col s3"><input value="" id="apGoal" type="text" placeholder="AP 달성목표" name="apGoal"/></div>
+                    <div class="col s3"><input value="" id="b2bGoal" type="text" placeholder="B2B 달성목표" name="b2bGoal"/></div>
+                    <div class="col s3"><input value="" id="b2cGoal" type="text" placeholder="B2C 달성목표" name="b2cGoal"/></div>
+                    <div class="col s3"><input value="" id="ctGoal" type="text" placeholder="CT 달성목표" name="ctGoal"/></div>
+                    <div class="col s3"><input value="" id="bdGoal" type="text" placeholder="BD 달성목표" name="bdGoal"/></div>
+                    <div class="col s3"><input value="" id="scGoal" type="text" placeholder="SC 달성목표" name="scGoal"/></div>
+                </div>
+                <div class="row">
+                    <div class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="imgAdd" id="imgAdd">등록
+                        <i class="material-icons right">send</i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modal2" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form id="form2">
+                <div class="row">
+                    <div class="col s12"><h4>월매출목표수정</h4></div>
+                    <div class="col s12"><h4>Date</h4></div>
+                    <div class="col s4">
+                        <input value="" id="_id" type="hidden" placeholder="년" name="_id"/>
+                        <input value="" id="year" type="text" placeholder="년" name="year"/>
+                    </div>
+                    <div class="col s4"><input value="" id="month" type="text" placeholder="월" name="month"/></div>
+                    <div class="col s12"><h4>팀별 달성목표</h4></div>
+                    <div class="col s3"><input value="" id="offGoal" type="text" placeholder="OFF 달성목표" name="offGoal"/></div>
+                    <div class="col s3"><input value="" id="apGoal" type="text" placeholder="AP 달성목표" name="apGoal"/></div>
+                    <div class="col s3"><input value="" id="b2bGoal" type="text" placeholder="B2B 달성목표" name="b2bGoal"/></div>
+                    <div class="col s3"><input value="" id="b2cGoal" type="text" placeholder="B2C 달성목표" name="b2cGoal"/></div>
+                    <div class="col s3"><input value="" id="ctGoal" type="text" placeholder="CT 달성목표" name="ctGoal"/></div>
+                    <div class="col s3"><input value="" id="bdGoal" type="text" placeholder="BD 달성목표" name="bdGoal"/></div>
+                    <div class="col s3"><input value="" id="scGoal" type="text" placeholder="SC 달성목표" name="scGoal"/></div>
+                </div>
+                <div class="row">
+                    <div class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="imgAdd" id="chartUpdate">등록
+                        <i class="material-icons right">send</i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modal3" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form id="form1">
+                <div class="row">
+                    <input value="" id="_id" type="hidden" placeholder="년" name="id1"/>
+                    <input value="" id="ahcivid" type="hidden" placeholder="년" name="ahcivid"/>
+                    <div class="col s4"><input value="" id="year" type="text" placeholder="년" name="year"/></div>
+                    <div class="col s4"><input value="" id="month" type="text" placeholder="월" name="month"/></div>
+                    <div class="col s4"><input value="" id="week" type="text" placeholder="주차" name="week"/></div>
+                    <div class="col s12"><h4>팀별 매출</h4></div>
+                    <div class="col s3"><input value="" id="offAchievement" type="text" placeholder="OFF 매출" name="offAchievement"/></div>
+                    <div class="col s3"><input value="" id="apAchievement" type="text" placeholder="AP 매출" name="apAchievement"/></div>
+                    <div class="col s3"><input value="" id="b2bAchievement" type="text" placeholder="B2B 매출" name="b2bAchievement"/></div>
+                    <div class="col s3"><input value="" id="b2cAchievement" type="text" placeholder="B2C 매출" name="b2cAchievement"/></div>
+                    <div class="col s3"><input value="" id="ctAchievement" type="text" placeholder="CT 매출" name="ctAchievement"/></div>
+                    <div class="col s3"><input value="" id="bdAchievement" type="text" placeholder="BD 매출" name="bdAchievement"/></div>
+                    <div class="col s3"><input value="" id="scAchievement" type="text" placeholder="SC 매출" name="scAchievement"/></div>
+                </div>
+                <div class="row">
+                    <div class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="imgAdd1" id="achievementAdd">등록
+                        <i class="material-icons right">send</i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal4" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form id="form4">
+                <div class="row">
+                    <div class="col s4">
+                        <input value="" id="id1" type="hidden" placeholder="년" name="id1"/>
+                        <input value="" id="ahcivid" type="hidden" placeholder="년" name="ahcivid"/>
+                        <input value="" id="year" type="text" placeholder="년" name="year"/>
+                    </div>
+                    <div class="col s4"><input value="" id="month" type="text" placeholder="월" name="month"/></div>
+                    <div class="col s4"><input value="" id="week" type="text" placeholder="주차" name="week"/></div>
+                    <div class="col s12"><h4>팀별 매출</h4></div>
+                    <div class="col s3"><input value="" id="offAchievement" type="text" placeholder="OFF 매출" name="offAchievement"/></div>
+                    <div class="col s3"><input value="" id="apAchievement" type="text" placeholder="AP 매출" name="apAchievement"/></div>
+                    <div class="col s3"><input value="" id="b2bAchievement" type="text" placeholder="B2B 매출" name="b2bAchievement"/></div>
+                    <div class="col s3"><input value="" id="b2cAchievement" type="text" placeholder="B2C 매출" name="b2cAchievement"/></div>
+                    <div class="col s3"><input value="" id="ctAchievement" type="text" placeholder="CT 매출" name="ctAchievement"/></div>
+                    <div class="col s3"><input value="" id="bdAchievement" type="text" placeholder="BD 매출" name="bdAchievement"/></div>
+                    <div class="col s3"><input value="" id="scAchievement" type="text" placeholder="SC 매출" name="scAchievement"/></div>
+                </div>
+                <div class="row">
+                    <div class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="imgAdd1" id="achiveUpdate">등록
+                        <i class="material-icons right">send</i>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+<script>
+    <%if(pageid < totalImgCount){%>
+    setTimeout("location.href='./"+<%-parseInt(pageid)+1%>+"'",5000);
+    <%}else{%>
+    setTimeout("location.href='./1'",5000);
+    <%}%>
+</script>
+<meta name="google-site-verification" content="O7b1mOIx2CjpQJevgdmfCv5mW6JOy02EJrqtX8AheoE" />
+<!--Import Google Icon Font-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/materialize.min.js"></script>
+<head>
+    <title></title>
+    <style>
+        body {
+            font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+            padding : 0px;
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://localhost:3000');
+        socket.on('toclient',function(data){
+            console.log(data.msg);
+            Materialize.toast(data.msg,3000)
+            // $('#msgs').append(data.msg+'<BR>');
+        });
+    </script>
+<img src="\<%-datas[0].filepath%>">
+</body>
+</html>

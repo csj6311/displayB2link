@@ -1,0 +1,162 @@
+<script>
+    <%if(pageid < totalImgCount){%>
+    setTimeout("location.href='./"+<%-parseInt(pageid)+1%>+"'",7000);
+    <%}else if(totalImgCount == 1){%>
+    setTimeout("location.href='./"+<%-parseInt(pageid)%>+"'",7000);
+    <%}else{%>
+    setTimeout("location.href='./1'",7000);
+    <%}%>
+</script>
+<!--<link rel="stylesheet" type="text/css" href="/css/style.css">-->
+<title>DevStuffAnything</title>
+<meta name="google-site-verification" content="O7b1mOIx2CjpQJevgdmfCv5mW6JOy02EJrqtX8AheoE" />
+<!--Import Google Icon Font-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/materialize.min.js"></script>
+<style>
+    #chartdiv {
+        width		: 96%;
+        height		: 75%;
+        font-size	: 50px;
+    }
+</style>
+<html>
+<head>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script>
+    var chart = AmCharts.makeChart("chartdiv", <%-test%>);
+    function chardatasosu(param1,param2){
+        var chardatasosu = ((param1/param2)*100).toFixed(2)
+        return chardatasosu;
+    }
+</script>
+    <!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
+    <!--<script type="text/javascript">-->
+        <!--google.charts.load('current', {'packages':['bar']});-->
+        <!--google.charts.setOnLoadCallback(drawChart);-->
+        <!--function drawChart() {-->
+            <!--var data = google.visualization.arrayToDataTable(<%-test%>);-->
+
+            <!--var options = {-->
+                <!--legend: { position: "none" }-->
+
+            <!--};-->
+
+            <!--var chart = new google.charts.Bar(document.getElementById('columnchart_material'));-->
+
+            <!--chart.draw(data, options);-->
+        <!--}-->
+    <!--</script>-->
+
+</head>
+<body>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://b2labs.b2link.co.kr:9001');
+        socket.on('toclient',function(data){
+            console.log(data.msg);
+            //Materialize.toast(data.msg,3000)
+            $('#modal2').openModal();
+
+            $('#modal2 .row').html(data.msg)
+            // $('#msgs').append(data.msg+'<BR>');
+        });
+    </script>
+<div class="row">
+    <div style="padding:0px 0 40px 0px;">
+        <img src="/img/chartData_top.jpg">
+    </div>
+    <div class="col s4">
+
+        <div style="padding:30px 0 0 70px;">
+
+            <div><span style="font-size: 120px;"><%-((test1[0].sales.total / test1[0].goal.total)*100).toFixed(2)%> %</span></div>
+            <div  style="padding: 5px;"></div>
+            <div><h3 style="font-family: 'Roboto' !important; font-weight: 700;">B2LiNK Goal / Achievement</h3></div>
+            <div><h3 style=""><%-test1[0].goal.total.toLocaleString()%> / <%-test1[0].sales.total.toLocaleString()%></h3></div>
+            <div  style="padding: 5px;"></div>
+            <div><h4><span style="font-family: 'Roboto' !important; font-weight: 700;">Goal / Achievement</span></h4></div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>OFF</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.off.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.off.toLocaleString().toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>AP</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.ap.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.ap.toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>B2B</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.b2b.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.b2b.toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>B2C</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.b2c.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.b2c.toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>CT</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.ct.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.ct.toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>BD</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.bd.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.bd.toLocaleString()%></h4></li>
+            </div>
+            <div style="display:table">
+                <li style="display:table-cell;width:70px;"><h4>CT</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].goal.sc.toLocaleString()%></h4></li>
+                <li style="display:table-cell;text-align:center;width:35px;font-family: 'Roboto' !important; font-weight: 700;"><h4>/</h4></li>
+                <li style="display:table-cell;text-align:right;width:120px;font-family: 'Roboto' !important; font-weight: 700;"><h4><%-test1[0].sales.sc.toLocaleString()%></h4></li>
+            </div>
+        </div>
+    </div>
+    <div class="col s8">
+        <div id="chartdiv"></div>
+    </div>
+</div>
+
+
+
+
+
+    <div id="modal2" class="modal">
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="card-panel grey lighten-5 z-depth-1">
+                <div class="row valign-wrapper">
+                    <div class="col s2">
+                        <img src="images/yuna.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+                    </div>
+                    <div class="col s10">
+              <span class="black-text">
+                This is a square image. Add the "circle" class to it to make it appear circular.
+              </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--<div id="columnchart_material" style="padding:50px;width: 90%; height: 800px;"></div>-->
+</body>
+</html>

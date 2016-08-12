@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>DevStuffAnything</title>
+    <meta name="google-site-verification" content="O7b1mOIx2CjpQJevgdmfCv5mW6JOy02EJrqtX8AheoE" />
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/materialize.min.js"></script>
+</head>
+<script>
+    //브라우저 알림함수(테스트용)
+    function notifyMe() {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        }
+
+        // Let's check if the user is okay to get some notification
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var options = {
+                body: "This is the body of the notification",
+                icon: "icon.jpg",
+                dir : "ltr"
+            };
+            var notification = new Notification("Hi there",options);
+        }
+
+        // Otherwise, we need to ask the user for permission
+        // Note, Chrome does not implement the permission static property
+        // So we have to check for NOT 'denied' instead of 'default'
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                // Whatever the user answers, we make sure we store the information
+                if (!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+
+                // If the user is okay, let's create a notification
+                if (permission === "granted") {
+                    var options = {
+                        body: "This is the body of the notification",
+                        icon: "icon.jpg",
+                        dir : "ltr"
+                    };
+                    var notification = new Notification("Hi there",options);
+                }
+            });
+        }
+    }
+
+    var html = '';
+
+    //리스트정보 업데이트
+    function modifyAddValue(value1,value2,value3,value4,value5,value6,value7){
+        $("#modifyValue1").val(value1);
+        $("#modifyValue2").val(value2);
+        $("#modifyValue3").val(value3);
+        if(value4 == "Y"){
+            $("#modifyValue4").prop('checked', true);
+        }else if(value5 == "N"){
+            $("#modifyValue5").prop('checked', true);
+        }
+        $("#modifyValue6").val(value6);
+        $("#modifyValue7").val(value7);
+        console.log("test");
+        $('#modal2').openModal();
+    }
+
+    //리스트삭제
+    function ajaxDelete(aaa){
+
+        $.ajax({
+            type : "POST",
+            url : "/display/delete",
+            contentType: "application/json; charset=utf-8",
+            processData: false,
+            cache : false,
+            data: '{\"_id\": \"' + aaa + '\"}',
+            dataType: "json",
+            success : function() {
+                $('#modal2').closeModal();
+                ajaxListCall(<%-'\''+divNo+'\''%>);
+                Materialize.toast('디스플레이가 수정되었습니다.', 1000)
+            },
+            error : function() {
+                Materialize.toast('이런...', 1000)
+            }
+        });
+    }
+
+    //리스트호출
+    function ajaxListCall(param1){
+    var divNo = param1;
+        $.ajax({
+            url: "/display/lists/"+divNo,
+            processData: false,
+            contentType: false,
+            cache : false,
+            success: function(results){
+                $('#modal1').closeModal();
+                for(var i=0; i < results.length;i++){
+                 html += '<tr>'
+
+                    if(!results[i].filepath){
+                        html += '<td><i class=\"material-icons medium icon-demo\">insert_chart</i></td>';
+                    }else{
+                        html += '<td><img src="/'+results[i].filepath %>+'" width="100px"></td>';
+                    }
+
+                 html += '<td>'+results[i].divNo+'</td>'
+                 html += '<td>'+results[i].pageId+'&nbsp;&nbsp;<a class="waves-effect waves-light btn #304ffe indigo accent-4" href="#" onclick="location.href=\'/display/'+results[i].divNo+'/'+results[i].pageId+'\'">view</a></td>'
+                 html += '<td>'+results[i].pageType+'</td>'
+                 html += '<td>'+results[i].use+'</td>'
+                 html += '<td>'+results[i].file+'</td>'
+                 html += '<td>'+results[i].filepath+'</td>'
+                 html += '<td>'+results[i].regDate+'</td>'
+                 html += '<td>'
+                 html += '<a class="waves-effect waves-light btn modal-trigger1 #304ffe indigo accent-4" href="#modal2" onclick="modifyAddValue(\''+
+                 results[i].divNo+'\',\''+
+                 results[i].pageId+'\',\''+
+                 results[i].pageType+'\',\''+
+                 results[i].use+'\',\''+
+                 results[i].use+'\',\''+
+                 results[i].file+'\',\''+
+                 results[i]._id+'\')\">modi.</a>'
+                 html += '</td><td>'
+                 html += '<a class="waves-effect waves-light btn #304ffe indigo accent-4" href="#" onclick="ajaxDelete(\''+results[i]._id+'\')">del.</a></td>'
+                 html += '</tr>'
+                }
+
+                console.log(html);
+                $('#ttt').html(html);
+                $('#modal1').closeModal();
+                $('.cssload-square').show();
+            },
+        error : function() {
+        Materialize.toast('이런...', 1000)
+        }
+        }).done(function(){
+            $('.cssload-square').hide();
+            html ='';
+            $('form').each(function () {
+            this.reset();
+            });
+        })
+    }
+
+    $(document).ready(function() {
+        $('.modal-trigger').leanModal();
+        $('.modal-trigger1').leanModal();
+        ajaxListCall(<%-'\''+divNo+'\''%>);
+        $('.cssload-square').hide();
+        $("#imgAdd").click(function()
+        {
+            var form = $('form')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                type : "POST",
+                url : "/display/insert",
+                processData: false,
+                contentType: false,
+                cache : false,
+                data : formData,
+                success : function() {
+                    ajaxListCall(<%-'\''+divNo+'\''%>);
+
+                },
+                error : function() {
+                    Materialize.toast('이런...', 4000)
+                }
+            }).done(function() {
+                Materialize.toast('등록되었습니다..', 1000);
+            });
+        });
+        $("#imgUpdate").click(function() {
+        var form = $('form')[1];
+        var formData = new FormData(form);
+            $.ajax({
+                type : "POST",
+                url : "/display/update",
+                processData: false,
+                contentType: false,
+                cache : false,
+                data : formData,
+                success : function(data) {
+                    $('#modal2').closeModal();
+                    ajaxListCall(<%-'\''+divNo+'\''%>);
+                },
+                error : function(data) {
+                    Materialize.toast('이런...',1000)
+                }
+            }).done(function(){
+                Materialize.toast('파일이수정되었습니다.',1000)
+            });
+        });
+    });
+
+</script>
+<body>
+
+<div class="row">
+    <div class="col s3">
+        <ul style="transform: translateX(0%);" id="nav-mobile" class="side-nav fixed">
+            <li class="no-padding">
+                <ul class="collapsible collapsible-accordion">
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal"><h3>BDOS</h3></a></li>
+                </ul>
+            </li>
+            <li class="no-padding">
+                <ul class="collapsible collapsible-accordion">
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal" href="/display/list">DisplayOperation</a></li>
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal" href="/chart/list">ChartDataOperation</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="col offset-s2 s10">
+        <div class="col s12"><div class="row"></div></div>
+            <div class="col s3">
+                <a class="waves-effect waves-light btn modal-trigger  #304ffe indigo accent-4" href="#modal1">등록</a>
+            </div>
+            <div class="col s6">
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/">전체보기</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div1">div1</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div2">div2</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div3">div3</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div4">div4</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div5">div5</a>
+                <a class="waves-effect waves-light btn #304ffe indigo accent-4" href="/display/list/div6">div6</a>
+            </div>
+            <div class="col s11">
+            <table class="centered striped">
+                <thead>
+                <tr>
+                    <th data-field="img">image</th>
+                    <th data-field="Division">Division</th>
+                    <th data-field="PageNo">PageNo</th>
+                    <th data-field="PageType">PageType</th>
+                    <th data-field="Use">Use</th>
+                    <th data-field="File">File</th>
+                    <th data-field="FilePath">FilePath</th>
+                    <th data-field="RegDate">RegDate</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                </thead>
+                <tbody id="ttt">
+                <div class="cssload-square">
+                    <div class="cssload-square-part cssload-square-green"></div>
+                    <div class="cssload-square-part cssload-square-pink"></div>
+                    <div class="cssload-square-blend"></div>
+                </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red  btn modal-trigger" href='#modal5'>
+        <i class="large material-icons">mode_edit</i>
+    </a>
+</div>
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form class="col s6" name="display" method="post"  enctype="multipart/form-data" id="listAdd">
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select class="browser-default" name="divNo">
+                            <option value="" disabled selected>부서를 선택해주세요</option>
+                            <option value="div1">div1</option>
+                            <option value="div2">div2</option>
+                            <option value="div3">div3</option>
+                            <option value="div4">div4</option>
+                            <option value="div5">div5</option>
+                            <option value="div6">div6</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate" name="pageId">
+                        <label for="last_name">순서</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select class="browser-default" name="pageType">
+                            <option value="" disabled selected>페이지종류를 선택해주세요</option>
+                            <option value="img">Image</option>
+                            <option value="data">Chart</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate" name="year">
+                        <label for="last_name">년도</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate" name="month">
+                        <label for="last_name">월</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="radio" id="test1"  value="Y" name="use"/>
+                    <label for="test1">Yes</label>
+                    <input  type="radio" id="test2" value="N"  name="use"/>
+                    <label for="test2">No</label>
+                </div>
+                <div class="row">
+                    <div class="file-field input-field">
+                        <div class="btn #304ffe indigo accent-4">
+                            <span>File</span>
+                            <input type="file" accept="image/*" name="upl" >
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="action" id="imgAdd">등록
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div id="modal2" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form class="col s6" name="display" method="post" enctype="multipart/form-data" id="updateForm">
+                <input type="hidden" class="validate" name="_id" id="modifyValue7">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select class="browser-default" name="divNo" id="modifyValue1">
+                            <option value="" disabled selected>부서를 선택해주세요</option>
+                            <option value="div1">div1</option>
+                            <option value="div2">div2</option>
+                            <option value="div3">div3</option>
+                            <option value="div4">div4</option>
+                            <option value="div5">div5</option>
+                            <option value="div6">div6</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="Placeholder" type="text" class="validate" name="pageId" id="modifyValue2">
+                        <label for="last_name">순서</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select class="browser-default" name="pageType" id="modifyValue3">
+                            <option value="" disabled selected>페이지종류를 선택해주세요</option>
+                            <option value="img">Image</option>
+                            <option value="data">Chart</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="radio" id="modifyValue4" value="Y" name="use"/>
+                    <label for="modifyValue4">Yes</label>
+                    <input type="radio" id="modifyValue5" value="N" name="use"/>
+                    <label for="modifyValue5">No</label>
+                </div>
+                <div class="row">
+                    <div class="file-field input-field">
+                        <div class="btn #304ffe indigo accent-4">
+                            <span>File</span>
+                            <input type="file" accept="image/*" name="upl" >
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                        <div class="input-field col s6">
+                            <input placeholder="Placeholder" type="text" class="validate" id="modifyValue6">
+                            <label for="last_name">첨부이미지</label>
+                        </div>
+                        modifyValue6
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="action" id="imgUpdate">등록
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="modal5" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <b>Send message</b><p>
+                Message  <input type="text" id="msgbox"/>
+                <br>
+                <button class="btn waves-effect waves-light #304ffe indigo accent-4" type="button" name="action" id="msgbtn">등록
+                    <i class="material-icons right">send</i>
+                </button>
+                <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+                <script type="text/javascript">
+                    var socket = io.connect('http://b2labs.b2link.co.kr:9001');
+                    $("#msgbox").keyup(function(event) {
+                        if (event.which == 13) {
+                            socket.emit('fromclient',{msg:$('#msgbox').val()});
+                            $('#msgbox').val('');
+                        }
+                    });
+                    $("#msgbtn").click(function() {
+                            socket.emit('fromclient',{msg:$('#msgbox').val()});
+                            $('#msgbox').val('');
+                    });
+                    socket.on('toclient',function(data){
+                        console.log(data.msg);
+                        //$('#msgs').append(data.msg+'<BR>');
+                        Materialize.toast(data.msg,3000)
+                    });
+                </script>
+        </div>
+    </div>
+</div>
+

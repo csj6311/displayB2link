@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+
+<script>
+<%if(pageid < totalImgCount){%>
+  setTimeout("location.href='./"+<%-parseInt(pageid)+1%>+"'",5000);
+<%}else{%>
+  setTimeout("location.href='./1'",5000);
+<%}%>
+</script>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  <img src="/images/<%-pageid%>.jpg">
+  </body>
+</html>

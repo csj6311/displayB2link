@@ -46,7 +46,7 @@ router.get('/play/:divNo', function(req, res) {
             }
         ]
     ).exec(function(err,displays){
-        res.render("test.ejs",{data : displays})
+        res.render("divPlay.ejs",{data : displays})
     })
 });
 

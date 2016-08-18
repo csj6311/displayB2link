@@ -12,7 +12,7 @@ var chart = require('./routes/chart')
 
 var app = express();
 
-// view engine setup
+// view engine setupssdasd
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -70,7 +70,7 @@ app.use(function(err, req, res, next) {
 });
 
 /**
- * Module dependencies.
+ * Module dependencies.sadasdasdas
  */
 
 var debug = require('debug')('displayB2link:server');

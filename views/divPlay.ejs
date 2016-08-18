@@ -62,7 +62,7 @@
                     console.log("counter=>",counter)
                     console.log("timer=>",timer);
                     if(data[counter].pageType == 'img'){
-                        $('#row').html("<img id=\'aaa\' src=\'/"+data[counter].filepath+"\'>")
+                        $('#row').html("<div><img id=\'aaa\' src=\'/"+data[counter].filepath+"\'></div>")
                         $('#aaa').css('width', "100%");
                     }else{
 
@@ -236,11 +236,10 @@
 </head>
 <body>
 <div class="row" id="row"></div>
+<div id="modal1" class="modal">
+    <div class="modal-content fontSize_80"></div>
+</div>
 </body>
 </html>
 
 
-<div id="modal1" class="modal">
-    <div class="modal-content fontSize_80">
-    </div>
-</div>

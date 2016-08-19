@@ -1,8 +1,6 @@
-/**
- * Created by win7 on 2016-08-10.
- */
-'use strict'
+
 var gulp = require('gulp');
+var jshint = require('gulp-jshint');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
@@ -11,16 +9,11 @@ var nodemon = require('gulp-nodemon');
 var browserSync = require('browser-sync').create();
 var babel = require('gulp-babel');
 
-
-
-// gulp.task('browser-sync', function() {
-//     browserSync.init({
-//         port:3000,
-//         server: {
-//             baseDir: "./app.js"
-//         }
-//     });
-// });
+gulp.task('lint', function() {
+    return gulp.src('*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter());
+});
 
 gulp.task('combine:js', function () {
     return gulp.src('*.js')
@@ -39,7 +32,6 @@ gulp.task('combine:js', function () {
  * 즉, 파일 변경을 감지한다.
  * =================================+
  */
-
 
 gulp.task('html', function (done) {
 browserSync.reload();
@@ -81,4 +73,4 @@ gulp.task('watch', function () {
 
 });
 
-gulp.task('default', ['browserSync','watch']);
+gulp.task('default', ['browserSync','watch','lint']);

@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var display = require('./routes/display')
-var chart = require('./routes/chart')
+var display = require('./routes/display');
+var chart = require('./routes/chart');
 
 var app = express();
 
@@ -96,7 +96,7 @@ io.sockets.on('connection',function(socket){
         socket.broadcast.emit('toclient',data); // 자신을 제외하고 다른 클라이언트에게 보냄
         //socket.emit('toclient',data); // 해당 클라이언트에게만 보냄. 다른 클라이언트에 보낼려면?
         console.log('Message from client :'+data.msg);
-    })
+    });
 });
 
 function normalizePort(val) {
@@ -124,9 +124,7 @@ function onError(error) {
         throw error;
     }
 
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+    var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -149,9 +147,7 @@ function onError(error) {
 
 function onListening() {
     var addr = server.address();
-    var bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
+    var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
 

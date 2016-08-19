@@ -46,3 +46,6 @@ var dbInfo = displayConfig;
 var dbURI = 'mongodb://' + dbInfo.user + ':' + dbInfo.pwd + '@' + dbInfo.host + ':' + dbInfo.port + '/' + dbInfo.db;
 var connection =  mongoose.connect(dbURI);
 module.exports = connection;
+
+gulp example
+https://github.com/eu81273/gulp-step-by-step

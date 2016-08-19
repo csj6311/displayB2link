@@ -8,11 +8,19 @@ var rename = require('gulp-rename'); // gulp-rename 모듈 호출
 var nodemon = require('gulp-nodemon');
 var browserSync = require('browser-sync').create();
 var babel = require('gulp-babel');
+var minifycss = require('gulp-minify-css');
 
 gulp.task('lint', function() {
     return gulp.src('*.js')
         .pipe(jshint())
         .pipe(jshint.reporter());
+});
+
+
+gulp.task('minifycss', function () {
+    return gulp.src('public/css/*.css') //css 폴더의 main.css 파일을
+        .pipe(minifycss()) //포함되어 있는 @import를 분석해서 하나의 파일로 병합하고 minify 해서
+        .pipe(gulp.dest('dist/css')); //dist 폴더에 저장
 });
 
 gulp.task('combine:js', function () {
@@ -70,6 +78,7 @@ gulp.task('watch', function () {
 
     gulp.watch('./*.js', ['combine:js']);
     gulp.watch('views/*.ejs',['html']);
+    gulp.watch('public/css/*.css',['minifycss']);
 
 });
 

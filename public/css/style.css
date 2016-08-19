@@ -26,5 +26,6 @@ tr{
 }
 .writebox li{
  float: left;
-  padding: 10px;
+    padding: 10px;
+
 }
